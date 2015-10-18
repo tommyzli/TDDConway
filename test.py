@@ -68,14 +68,26 @@ class TestConwayTestCase(object):
 
     def test_overpopulated_area_cell_dies(self):
         game = GameOfLife(10, 10)
+        game.set_cell(0, 0)
+        game.set_cell(1, 1)
+        game.set_cell(0, 1)
+        game.set_cell(1, 0)
+        game.set_cell(2, 1)
+
+        game.step()
+
+        assert_false(game.is_cell_alive(x=1, y=1))
+
+    def test_well_populated_area_cell_dies(self):
+        game = GameOfLife(10, 10)
         game.set_cell(5, 5)
         game.set_cell(4, 5)
-        game.set_cell(5, 6)
+        game.set_cell(5, 4)
         game.set_cell(4, 4)
 
         game.step()
 
-        assert_true(game.is_cell_alive(x=5, y=6))
+        assert_true(game.is_cell_alive(x=5, y=4))
         assert_true(game.is_cell_alive(x=4, y=4))
-        assert_false(game.is_cell_alive(x=5, y=5))
-        assert_false(game.is_cell_alive(x=4, y=5))
+        assert_true(game.is_cell_alive(x=5, y=5))
+        assert_true(game.is_cell_alive(x=4, y=5))

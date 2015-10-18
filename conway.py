@@ -22,24 +22,17 @@ class GameOfLife(object):
 
     def step(self):
         map(
-            lambda (x, y): self.kill_cell_if_isolated(x, y) and self.kill_cell_if_overpopulated(x, y),
+            lambda (x, y): self.kill_cell(x, y),
             [(x_coord, y_coord) for x_coord in xrange(self.x) for y_coord in xrange(self.y)]
         )
 
-    def kill_cell_if_isolated(self, x, y):
-        if 2 >= sum(
+    def kill_cell(self, x, y):
+        num_neighbours = sum(
             map(
                 lambda (x, y): self.is_cell_alive(x, y),
                 [(x_coord, y_coord) for x_coord in [x - 1, x, x + 1] for y_coord in [y - 1, y, y + 1]]
             )
-        ):
-            self.set_cell(x, y, False)
+        )
 
-    def kill_cell_if_overpopulated(self, x, y):
-        if 3 < sum(
-            map(
-                lambda (x, y): self.is_cell_alive(x, y),
-                [(x_coord, y_coord) for x_coord in [x - 1, x, x + 1] for y_coord in [y - 1, y, y + 1]]
-            )
-        ):
+        if num_neighbours < 3 or num_neighbours <= 2:
             self.set_cell(x, y, False)
